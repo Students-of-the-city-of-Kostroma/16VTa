@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <iostream>
-#include <math.h>
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_NONSTDC_NO_DEPRECATE
@@ -46,12 +45,6 @@ int otvet(char a[])
 		vihod[m] = a[i];
 		m++;
 		}*/
-		else if (a[i+2] == '0' && a[i] == '/')
-		{
-			cout <<"Але, ты что в школе не учился??? " << endl;
-			cout <<"НА 0 делить НЕЛЬЗЯ!!!! " << endl;
-			break;
-		}
 
 		else if (a[i] == '+' || a[i] == '-' || a[i] == '/' || a[i] == '*')
 		{
@@ -177,7 +170,6 @@ int otvet(char a[])
 			promzn = promzn / delitel;		    // ставит в нужное нам место запятую.
 		//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
-		
 
 
 		//действия с Е при for (sc = sc + 1; vihod[sc] != razdelznak; sc++) 
