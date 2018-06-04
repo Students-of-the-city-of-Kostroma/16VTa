@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <iostream>
-#include <math.h>
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_NONSTDC_NO_DEPRECATE
@@ -10,18 +9,25 @@ using namespace std;
 int prioritet(char a);
 
 
+
 int otvet(char a[])
 {
+
 	char razdelznak = '_';
 	char vihod[100];
 	char stek[100];
 	int j = 0, m = 0, i = 0;
 	int otvet;
 	char perem;
+	int testdlyanekorrektnogovvode;
+	int testnamaksimalnoekolvosimvolov;
 	int len;
+	int provna2znaka;
+	
 
 
 	len = strlen(a);
+
 
 	while ((i < len) && (a[i] != '0' || a[i] != '='))
 	{
@@ -30,9 +36,13 @@ int otvet(char a[])
 			vihod[m] = a[i];
 			m++;
 		}
+		else if (a[i] == '(')
+		{
+			stek[j] = a[i];
+			j++;
+		}
 
 
-		//////////Для числа с Е
 		else if (a[i] == 'e')
 		{
 			vihod[m] = a[i];
@@ -41,53 +51,78 @@ int otvet(char a[])
 			m = m + 3;
 			i = i + 2;
 		}
-		/*if (a[i] >= '0' && a[i] <= '9' && a[i+1] >='0' && a[i+1] <= '9')
-		{
-		vihod[m] = a[i];
-		m++;
-		}*/
-		else if (a[i+2] == '0' && a[i] == '/')
-		{
-			cout <<"Але, ты что в школе не учился??? " << endl;
-			cout <<"НА 0 делить НЕЛЬЗЯ!!!! " << endl;
-			break;
-		}
+
 
 		else if (a[i] == '+' || a[i] == '-' || a[i] == '/' || a[i] == '*')
 		{
-			if (j == 0)
+			if (a[i + 1] == '+' || a[i + 1] == '-' || a[i + 1] == '/' || a[i + 1] == '*')
 			{
-				vihod[m] = razdelznak;
-				m++;
-				stek[j] = a[i];
-				j++;
+				provna2znaka = 1;
+				break;
 			}
 			else
 			{
-				if (prioritet(stek[j - 1]) < prioritet(a[i]))
+
+				if (j == 0)
 				{
 					vihod[m] = razdelznak;
 					m++;
 					stek[j] = a[i];
 					j++;
 				}
-				else//если пpиоpитет меньше пеpеписываем в выходную стpоку все опеpации с большим или pавным пpиоpитетом записываем в стек поступившую опеpацию
+				else
 				{
-					vihod[m] = razdelznak;
-					m++;
-					while (j >= 1 && prioritet(stek[j - 1]) >= prioritet(a[i]))
+					if (prioritet(stek[j - 1]) < prioritet(a[i]))
 					{
-						vihod[m] = stek[j - 1];
+						vihod[m] = razdelznak;
 						m++;
-						j--;
+						stek[j] = a[i];
+						j++;
 					}
-					stek[j] = a[i];
-					++j;
+					else//если пpиоpитет меньше пеpеписываем в выходную стpоку все опеpации с большим или pавным пpиоpитетом записываем в стек поступившую опеpацию
+					{
+						vihod[m] = razdelznak;
+						m++;
+						while (j >= 1 && prioritet(stek[j - 1]) >= prioritet(a[i]))
+						{
+							vihod[m] = stek[j - 1];
+							m++;
+							j--;
+						}
+						stek[j] = a[i];
+						++j;
+					}
 				}
 			}
+		
 		}
+		else if (a[i] == ')')
+		{
+			while (stek[j - 1] != '(')
+			{
+				vihod[m] = razdelznak;
+				m++;
+
+				vihod[m] = stek[j - 1];
+
+				j--;
+				m++;
+
+			}
+			j--;
+		}
+		
+		
+		else
+		{
+			testdlyanekorrektnogovvode = 1;
+			
+		}
+
 		i++;
 	}
+
+	testnamaksimalnoekolvosimvolov = i;
 
 
 
@@ -101,64 +136,42 @@ int otvet(char a[])
 		--j;
 	}
 	vihod[m] = '\0';
-//	cout << "Представление в обратной польской = " << vihod << endl;
+	//cout << "Представление в обратной польской = " << vihod << endl;
 
-	float massint[100];
+	double massint[100];
 	int k = 0;
 	float promzn = 0;
+	int testnamaxznachenieprivvode = 0; //////////////////////////////////////////////
+	int ogranichenienavvod ;
+	int testnaogranichenienavvodvnachale;
 	float maspromzn;
 	int delitel = 1;
 	int sc;
 	int znzpt = 0;
 	float posleE;
 	int stepenposleE;
+	
 
 
 	for (int d = 0; d <= m; d++)
 	{
+		
 
 		if (vihod[d] >= '0' && vihod[d] <= '9')
 		{
 			promzn = promzn * 10 + (vihod[d] - '0');
+			
+			////////////////////////////
+			ogranichenienavvod = promzn;
+			///////////////////////////
+			
 		}
 
 
-		//вариант где for (sc = sc + 1; vihod[sc] != 'e' && vihod[sc] != razdelznak; sc++)
-		//При непредвиденных ошибках раскоментить, может помочь, но это не тончо 
-		/*else if (vihod[d] == '.')			//если точка
-		{
-		//cout << "d ==" << d << endl;	//проверка для d
-		int sc = d;
-		//не знаю зачем, возможно можно как то упростить алгоритм
-		for (sc = sc + 1; vihod[sc] != 'e' && vihod[sc] != razdelznak; sc++)
-		{
-		d++;						//перескакиваем на след элемент, при первом входе в ФОР нужно чтоб перейти с точки на след элемент и начать вычисление
-		//	cout << "d ==" << d << endl;  // еще одна проверочка
-		znzpt = znzpt * 10;           //изначально znzpt = 0; умножает число на 10, чтобы в появившийся новый разряд десятков записать след число
-		znzpt = (znzpt + vihod[sc] - '0'); // продолжение составления числа после зарятой записываем в появившийся новый разряд десятков считаное
-		//следующее число, и преобразовываем это считаное число в int
-		delitel = delitel * 10;			// высчитывается делитель
-
-		cout << "Числа после запятой" << znzpt << endl;
-		cout << "Делитель" << delitel << endl;
-
-
-		}
-		promzn = promzn *delitel + znzpt;  //к нашему числу до запятой, прибавляет все знаки после запятой (например, было число 12.32
-		//до выполнения действия promzn = 12  znzpt = 32;
-		// действия мы получим promzn = 1232
-		promzn = promzn / delitel;		    // ставит в нужное нам место запятую.
-		cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
-
-		}*/
-
-
+		
 		else if (vihod[d] == '.')			//если точка
 		{
-			//cout << "d ==" << d << endl;	//проверка для d
-			//int sc = d;
-			//d++;
-			//не знаю зачем, возможно можно как то упростить алгоритм 
+			
 			for (d; vihod[d + 1] != 'e' && vihod[d + 1] != razdelznak; d++)
 			{
 				//перескакиваем на след элемент, при первом входе в ФОР нужно чтоб перейти с точки на след элемент и начать вычисление
@@ -167,58 +180,27 @@ int otvet(char a[])
 				znzpt = (znzpt + vihod[d + 1] - '0'); // продолжение составления числа после зарятой записываем в появившийся новый разряд десятков считаное
 				//следующее число, и преобразовываем это считаное число в int
 				delitel = delitel * 10;			// высчитывается делитель
-			//	cout << "Числа после запятой" << znzpt << endl;
-		//		cout << "Делитель" << delitel << endl;
+				//	cout << "Числа после запятой" << znzpt << endl;
+				//cout << "Делитель" << delitel << endl;
 			}
 
 			promzn = promzn *delitel + znzpt;  //к нашему числу до запятой, прибавляет все знаки после запятой (например, было число 12.32 
 			//до выполнения действия promzn = 12  znzpt = 32;
 			// действия мы получим promzn = 1232
 			promzn = promzn / delitel;		    // ставит в нужное нам место запятую.
-		//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
+
+			/////////////////////////////////////////////////////
+			ogranichenienavvod = ogranichenienavvod*delitel+znzpt; //ограничение на ввод числа не более 6-ти знаков
+			/////////////////////////////////////////////////////
+
+
+			
+			
+			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
+
+
 		
-
-
-		//действия с Е при for (sc = sc + 1; vihod[sc] != razdelznak; sc++) 
-		//При непредвиденных ошибках раскоментить, может помочь, но это не тончо 
-		/*else if (vihod[d] == 'e') //
-		{
-		int sc = d;						//не знаю зачем, возможно можно как то упростить алгоритм
-
-		for (sc = sc + 1; vihod[sc] != razdelznak; sc++)
-		{
-		d++;
-		if (vihod[sc] == '+')
-		{
-		stepenposleE = vihod[sc + 1] - '0';
-		cout << "Степень после Е+  = " <<stepenposleE << endl;
-		//3e+4_;
-		posleE = pow(10, stepenposleE);
-		cout << "Число возведенное в степень после  Е+ = " << posleE << endl;
-		promzn = promzn*posleE;
-		cout << "Число с расчетом Е+ для записи в массив = " << promzn << endl;
-		sc++;
-		d++;
-
-
-		}
-		else if (vihod[sc] == '-')
-		{
-		stepenposleE = vihod[sc + 1] - '0';
-		cout << "Степень после Е-  = " << stepenposleE << endl;
-		//3e+4_;
-		posleE = 1 / pow(10, stepenposleE);
-		cout << "Число возведенное в степень после  Е- = " << posleE << endl;
-		cout << "Число в массиве до возведения в Е- = " << promzn << endl;
-		promzn = promzn*posleE;
-		cout << "Число с расчетом Е- для записи в массив = " << promzn << endl;
-		sc++;
-		d++;
-
-		}
-		}
-		}*/
 
 		else if (vihod[d] == 'e') // 
 		{
@@ -227,34 +209,44 @@ int otvet(char a[])
 				if (vihod[d + 1] == '+')
 				{
 					stepenposleE = vihod[d + 2] - '0';
-				//	cout << "Степень после Е+  = " << stepenposleE << endl;
 					posleE = pow(10, stepenposleE);
-				//	cout << "Число возведенное в степень после  Е+ = " << posleE << endl;
 					promzn = promzn*posleE;
-				//	cout << "Число с расчетом Е+ для записи в массив = " << promzn << endl;
 					sc++;
 					d++;
+
+					///////////////////////////////////////////////
+					ogranichenienavvod = ogranichenienavvod*posleE;
+					//////////////////////////////////////////////
+				
+					
 				}
 				else if (vihod[d + 1] == '-')
 				{
 					stepenposleE = vihod[d + 2] - '0';
-				//	cout << "Степень после Е-  = " << stepenposleE << endl;
 					posleE = 1 / pow(10, stepenposleE);
-				//	cout << "Число возведенное в степень после  Е- = " << posleE << endl;
-				//	cout << "Число в массиве до возведения в Е- = " << promzn << endl;
 					promzn = promzn*posleE;
-				//	cout << "Число с расчетом Е- для записи в массив = " << promzn << endl;
 					sc++;
 					d++;
+
+				    ///////////////////////////////////////////////
+					ogranichenienavvod = ogranichenienavvod*posleE;
+					///////////////////////////////////////////////
+
+					
 
 				}
 			}
 		}
+		
+		
+
 		else if (vihod[d] == razdelznak)
 		{
+			//cout <<"Promzn чисто проверить ============== " <<promzn << endl;
+			
 			massint[k] = promzn;
 			k++;
-			promzn = 0;
+			promzn = 0;  //скидываем значения к первоначальным(ниже тоже самое происходит)
 			znzpt = 0;
 			posleE = 0;
 			delitel = 1;
@@ -279,15 +271,59 @@ int otvet(char a[])
 			massint[k - 2] = massint[k - 2] / massint[k - 1];
 			k--;
 		}
+
+		else if (ogranichenienavvod / 1000000 != 0)
+		{
+			testnaogranichenienavvodvnachale = 1;
+			k++;
+			break;
+		}
 	}
-	//	cout << "Тест ИнтМассива k = " << massint[k] << endl;
-	//	cout << "Тест ИнтМассива k-1 = " << massint[k-1] << endl;
-	//	cout << "Тест ИнтМассива k-2 = " << massint[k-2] << endl;
-	//	cout << "Тест ИнтМассива k-3 = " << massint[k - 3] << endl;
+
 
 	for (int kk = 0; kk < k; kk++)
-	{
-		cout << "(Ответ) = " << massint[kk] << endl;
+	{ 
+		if (testnaogranichenienavvodvnachale == 1 && testnamaksimalnoekolvosimvolov > 50 )
+		{
+			
+			cout << endl <<  " Одно из введеных вами чисел слишком большое (содержит в себе более 6 цифр)" << endl << endl;
+			cout << endl << " и привысили колличество вводимых символов (больше чем 50)" << endl << endl;
+			break;
+		}
+		else if (testnaogranichenienavvodvnachale == 1)
+		{
+			cout << endl << " Одно из введеных вами чисел слишком большое (содержит в себе более 6 цифр)" << endl << endl;
+			break;
+		}
+		else if (provna2znaka == 1)
+		{
+			cout << endl << "нельзя вводить 2 и более знаков подряд" << endl << endl;
+			break;
+		}
+
+		else if ((massint[kk] > 999999 || massint[kk] < -999999) && testnamaksimalnoekolvosimvolov <=50)// возможно уже и не нужно
+		{
+			
+			cout << endl<<  "   Получилось слишком большое значение " << endl;
+			cout << "   Программа поддерживает максимум 6-ти значный ответ" << endl;
+			cout << "   если число получится с запятой, то программа его округлит" << endl << endl;
+		}
+
+		else if (testnamaksimalnoekolvosimvolov > 50)
+		{
+			cout <<endl << "Вы превысили количество вводимых символов" << endl << endl;
+			break;
+		}
+
+		else if (testdlyanekorrektnogovvode == 1)
+		{
+			cout << "Некорректный ввод" << endl;
+			break;
+		}
+
+		else
+		cout << "Тест ИнтМассива (Ответ) = " << massint[kk] << endl;
+		
 	}
 
 }
@@ -301,6 +337,9 @@ int prioritet(char a)
 	case '-':
 	case '+':
 		return 2;
+	case '(':
+		return 1;
+
 
 	}
 }
