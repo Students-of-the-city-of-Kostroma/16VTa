@@ -113,6 +113,7 @@ int otvet(char a[])
 			}
 			j--;
 		}
+		if (a[i] == ')')
 		else if (a[i] == ')')
 		{
 			while (stek[j - 1] != '(')
@@ -128,13 +129,11 @@ int otvet(char a[])
 			}
 			j--;
 		}
-		
 		else
 		{
 			testdlyanekorrektnogovvode = 1;
 			break;
 		}
-
 		i++;
 	}
 
@@ -210,11 +209,7 @@ int otvet(char a[])
       /////////////////////////////////////////////////////
 			ogranichenienavvod = ogranichenienavvod*delitel+znzpt; //ограничение на ввод числа не более 6-ти знаков
 			/////////////////////////////////////////////////////
-
-
-			
-			
-			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
+      //	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
 		else if (vihod[d] == 'e') // 
 	else if (vihod[d] == 'e') // 
@@ -225,6 +220,10 @@ int otvet(char a[])
 				{
 					stepenposleE = vihod[d + 2] - '0';
 					
+					posleE = pow(10, stepenposleE);
+					
+					promzn = promzn*posleE;
+				
 					posleE = pow(10, stepenposleE);
 					
 					promzn = promzn*posleE;
@@ -252,6 +251,10 @@ int otvet(char a[])
 					posleE = 1 / pow(10, stepenposleE);
 					
 					promzn = promzn*posleE;
+				
+					posleE = 1 / pow(10, stepenposleE);
+					
+					promzn = promzn*posleE;
 					posleE = 1 / pow(10, stepenposleE);
 					promzn = promzn*posleE;
 					sc++;
@@ -270,6 +273,7 @@ int otvet(char a[])
 		else if (vihod[d] == razdelznak && (vihod[d + 1] == '+' || vihod[d + 1] == '-' || vihod[d + 1] == '/' || vihod[d + 1] == '*') && (vihod[d - 1] == '+' || vihod[d - 1] == '-' || vihod[d - 1] == '/' || vihod[d - 1] == '*'))
 		{
 			//cout << "Promzn чисто проверить 1.0 новое условие ============== " << promzn << endl;
+		}
 		}
 		else if (vihod[d] == razdelznak)
 		{
