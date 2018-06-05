@@ -97,6 +97,7 @@ int otvet(char a[])
 			}
 		
 		}
+		if (a[i] == ')')
 		else if (a[i] == ')')
 		{
 			while (stek[j - 1] != '(')
@@ -202,10 +203,8 @@ int otvet(char a[])
 			promzn = promzn / delitel;		    // ставит в нужное нам место запятую.
 			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
-
-
+		else if (vihod[d] == 'e') // 
 			/////////////////////////////////////////////////////
-=======
 			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
       /////////////////////////////////////////////////////
@@ -229,7 +228,6 @@ int otvet(char a[])
 					posleE = pow(10, stepenposleE);
 					
 					promzn = promzn*posleE;
-
 					posleE = pow(10, stepenposleE);
 					
 					promzn = promzn*posleE;
@@ -247,6 +245,10 @@ int otvet(char a[])
 				else if (vihod[d + 1] == '-')
 				{
 					stepenposleE = vihod[d + 2] - '0';
+					posleE = 1 / pow(10, stepenposleE);
+					
+					promzn = promzn*posleE;
+				
 					posleE = 1 / pow(10, stepenposleE);
 					
 					promzn = promzn*posleE;
@@ -338,7 +340,6 @@ int otvet(char a[])
 			cout << "   Программа поддерживает максимум 6-ти значный ответ" << endl;
 			cout << "   если число получится с запятой, то программа его округлит" << endl << endl;
 		}
-
 		else if (testnamaksimalnoekolvosimvolov > 50)
 		{
 			cout <<endl << "Вы превысили количество вводимых символов" << endl << endl;
@@ -384,3 +385,4 @@ int main()
 
 	return 0;
 }
+
