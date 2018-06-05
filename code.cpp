@@ -9,18 +9,25 @@ using namespace std;
 int prioritet(char a);
 
 
+
 int otvet(char a[])
 {
+
 	char razdelznak = '_';
 	char vihod[100];
 	char stek[100];
 	int j = 0, m = 0, i = 0;
 	int otvet;
 	char perem;
+	int testdlyanekorrektnogovvode;
+	int testnamaksimalnoekolvosimvolov;
 	int len;
+	int provna2znaka;
+	
 
 
 	len = strlen(a);
+
 
 	while ((i < len) && (a[i] != '0' || a[i] != '='))
 	{
@@ -48,38 +55,49 @@ int otvet(char a[])
 
 		else if (a[i] == '+' || a[i] == '-' || a[i] == '/' || a[i] == '*')
 		{
-			if (j == 0)
+			if (a[i + 1] == '+' || a[i + 1] == '-' || a[i + 1] == '/' || a[i + 1] == '*')
 			{
-				vihod[m] = razdelznak;
-				m++;
-				stek[j] = a[i];
-				j++;
+				provna2znaka = 1;
+				break;
 			}
 			else
 			{
-				if (prioritet(stek[j - 1]) < prioritet(a[i]))
+
+				if (j == 0)
 				{
 					vihod[m] = razdelznak;
 					m++;
 					stek[j] = a[i];
 					j++;
 				}
-				else//если пpиоpитет меньше пеpеписываем в выходную стpоку все опеpации с большим или pавным пpиоpитетом записываем в стек поступившую опеpацию
+				else
 				{
-					vihod[m] = razdelznak;
-					m++;
-					while (j >= 1 && prioritet(stek[j - 1]) >= prioritet(a[i]))
+					if (prioritet(stek[j - 1]) < prioritet(a[i]))
 					{
-						vihod[m] = stek[j - 1];
+						vihod[m] = razdelznak;
 						m++;
-						j--;
+						stek[j] = a[i];
+						j++;
 					}
-					stek[j] = a[i];
-					++j;
+					else//если пpиоpитет меньше пеpеписываем в выходную стpоку все опеpации с большим или pавным пpиоpитетом записываем в стек поступившую опеpацию
+					{
+						vihod[m] = razdelznak;
+						m++;
+						while (j >= 1 && prioritet(stek[j - 1]) >= prioritet(a[i]))
+						{
+							vihod[m] = stek[j - 1];
+							m++;
+							j--;
+						}
+						stek[j] = a[i];
+						++j;
+					}
 				}
 			}
+		
 		}
 		if (a[i] == ')')
+		else if (a[i] == ')')
 		{
 			while (stek[j - 1] != '(')
 			{
@@ -94,9 +112,33 @@ int otvet(char a[])
 			}
 			j--;
 		}
+		else if (a[i] == ')')
+		{
+			while (stek[j - 1] != '(')
+			{
+				vihod[m] = razdelznak;
+				m++;
+
+				vihod[m] = stek[j - 1];
+
+				j--;
+				m++;
+
+			}
+			j--;
+		}
+		
+		
+		else
+		{
+			testdlyanekorrektnogovvode = 1;
+			
+		}
 
 		i++;
 	}
+
+	testnamaksimalnoekolvosimvolov = i;
 
 
 
@@ -115,26 +157,31 @@ int otvet(char a[])
 	double massint[100];
 	int k = 0;
 	float promzn = 0;
-	
+	int testnamaxznachenieprivvode = 0; //////////////////////////////////////////////
+	int ogranichenienavvod ;
+	int testnaogranichenienavvodvnachale;
 	float maspromzn;
 	int delitel = 1;
 	int sc;
 	int znzpt = 0;
 	float posleE;
 	int stepenposleE;
+	
 
 
 	for (int d = 0; d <= m; d++)
 	{
+		
 
 		if (vihod[d] >= '0' && vihod[d] <= '9')
 		{
 			promzn = promzn * 10 + (vihod[d] - '0');
+			
+			////////////////////////////
+			ogranichenienavvod = promzn;
+			///////////////////////////
+			
 		}
-
-
-
-
 		else if (vihod[d] == '.')			//если точка
 		{
 			
@@ -156,11 +203,17 @@ int otvet(char a[])
 			promzn = promzn / delitel;		    // ставит в нужное нам место запятую.
 			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
-
-
-		
-
 		else if (vihod[d] == 'e') // 
+      /////////////////////////////////////////////////////
+			ogranichenienavvod = ogranichenienavvod*delitel+znzpt; //ограничение на ввод числа не более 6-ти знаков
+			/////////////////////////////////////////////////////
+
+
+			
+			
+			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
+		}
+	else if (vihod[d] == 'e') // 
 		{
 			for (d; vihod[d + 1] != razdelznak; d++)
 			{
@@ -172,19 +225,40 @@ int otvet(char a[])
 					
 					promzn = promzn*posleE;
 				
+					posleE = pow(10, stepenposleE);
+					
+					promzn = promzn*posleE;
+					posleE = pow(10, stepenposleE);
+					promzn = promzn*posleE;
 					sc++;
 					d++;
+
+					///////////////////////////////////////////////
+					ogranichenienavvod = ogranichenienavvod*posleE;
+					//////////////////////////////////////////////
+				
+					
 				}
 				else if (vihod[d + 1] == '-')
 				{
 					stepenposleE = vihod[d + 2] - '0';
-					
 					posleE = 1 / pow(10, stepenposleE);
 					
 					promzn = promzn*posleE;
 				
+					posleE = 1 / pow(10, stepenposleE);
+					
+					promzn = promzn*posleE;
+					posleE = 1 / pow(10, stepenposleE);
+					promzn = promzn*posleE;
 					sc++;
 					d++;
+
+				    ///////////////////////////////////////////////
+					ogranichenienavvod = ogranichenienavvod*posleE;
+					///////////////////////////////////////////////
+
+					
 
 				}
 			}
@@ -195,7 +269,6 @@ int otvet(char a[])
 			//cout << "Promzn чисто проверить 1.0 новое условие ============== " << promzn << endl;
 
 		}
-
 		else if (vihod[d] == razdelznak)
 		{
 			//cout <<"Promzn чисто проверить ============== " <<promzn << endl;
@@ -226,16 +299,55 @@ int otvet(char a[])
 			massint[k - 2] = massint[k - 2] / massint[k - 1];
 			k--;
 		}
+
+		else if (ogranichenienavvod / 1000000 != 0)
+		{
+			testnaogranichenienavvodvnachale = 1;
+			k++;
+			break;
+		}
 	}
 
 
 	for (int kk = 0; kk < k; kk++)
 	{ 
 		if (massint[kk] > 999999 || massint[kk] < -999999)
+		if ((massint[kk] > 999999 || massint[kk] < -999999) && testnamaksimalnoekolvosimvolov <=50)
+		{
+		if (testnaogranichenienavvodvnachale == 1 && testnamaksimalnoekolvosimvolov > 50 )
+		{
+			
+			cout << endl <<  " Одно из введеных вами чисел слишком большое (содержит в себе более 6 цифр)" << endl << endl;
+			cout << endl << " и привысили колличество вводимых символов (больше чем 50)" << endl << endl;
+			break;
+		}
+		else if (testnaogranichenienavvodvnachale == 1)
+		{
+			cout << endl << " Одно из введеных вами чисел слишком большое (содержит в себе более 6 цифр)" << endl << endl;
+			break;
+		}
+		else if (provna2znaka == 1)
+		{
+			cout << endl << "нельзя вводить 2 и более знаков подряд" << endl << endl;
+			break;
+		}
+
+		else if ((massint[kk] > 999999 || massint[kk] < -999999) && testnamaksimalnoekolvosimvolov <=50)// возможно уже и не нужно
 		{
 			cout << endl<<  "   Получилось слишком большое значение " << endl;
 			cout << "   Программа поддерживает максимум 6-ти значный ответ" << endl;
 			cout << "   если число получится с запятой, то программа его округлит" << endl << endl;
+		}
+		else if (testnamaksimalnoekolvosimvolov > 50)
+		{
+			cout <<endl << "Вы превысили количество вводимых символов" << endl << endl;
+			break;
+		}
+
+		else if (testdlyanekorrektnogovvode == 1)
+		{
+			cout << "Некорректный ввод" << endl;
+			break;
 		}
 		else
 		cout << "Тест ИнтМассива (Ответ) = " << massint[kk] << endl;
