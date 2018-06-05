@@ -22,6 +22,7 @@ int otvet(char a[])
 	int testdlyanekorrektnogovvode;
 	int testnamaksimalnoekolvosimvolov;
 	int len;
+	int provna2znaka;
 	
 
 
@@ -54,36 +55,61 @@ int otvet(char a[])
 
 		else if (a[i] == '+' || a[i] == '-' || a[i] == '/' || a[i] == '*')
 		{
-			if (j == 0)
+			if (a[i + 1] == '+' || a[i + 1] == '-' || a[i + 1] == '/' || a[i + 1] == '*')
 			{
-				vihod[m] = razdelznak;
-				m++;
-				stek[j] = a[i];
-				j++;
+				provna2znaka = 1;
+				break;
 			}
 			else
 			{
-				if (prioritet(stek[j - 1]) < prioritet(a[i]))
+
+				if (j == 0)
 				{
 					vihod[m] = razdelznak;
 					m++;
 					stek[j] = a[i];
 					j++;
 				}
-				else//если пpиоpитет меньше пеpеписываем в выходную стpоку все опеpации с большим или pавным пpиоpитетом записываем в стек поступившую опеpацию
+				else
 				{
-					vihod[m] = razdelznak;
-					m++;
-					while (j >= 1 && prioritet(stek[j - 1]) >= prioritet(a[i]))
+					if (prioritet(stek[j - 1]) < prioritet(a[i]))
 					{
-						vihod[m] = stek[j - 1];
+						vihod[m] = razdelznak;
 						m++;
-						j--;
+						stek[j] = a[i];
+						j++;
 					}
-					stek[j] = a[i];
-					++j;
+					else//если пpиоpитет меньше пеpеписываем в выходную стpоку все опеpации с большим или pавным пpиоpитетом записываем в стек поступившую опеpацию
+					{
+						vihod[m] = razdelznak;
+						m++;
+						while (j >= 1 && prioritet(stek[j - 1]) >= prioritet(a[i]))
+						{
+							vihod[m] = stek[j - 1];
+							m++;
+							j--;
+						}
+						stek[j] = a[i];
+						++j;
+					}
 				}
 			}
+		
+		}
+		else if (a[i] == ')')
+		{
+			while (stek[j - 1] != '(')
+			{
+				vihod[m] = razdelznak;
+				m++;
+
+				vihod[m] = stek[j - 1];
+
+				j--;
+				m++;
+
+			}
+			j--;
 		}
 		else if (a[i] == ')')
 		{
@@ -282,6 +308,11 @@ int otvet(char a[])
 		else if (testnaogranichenienavvodvnachale == 1)
 		{
 			cout << endl << " Одно из введеных вами чисел слишком большое (содержит в себе более 6 цифр)" << endl << endl;
+			break;
+		}
+		else if (provna2znaka == 1)
+		{
+			cout << endl << "нельзя вводить 2 и более знаков подряд" << endl << endl;
 			break;
 		}
 
