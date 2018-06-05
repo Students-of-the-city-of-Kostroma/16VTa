@@ -111,6 +111,21 @@ int otvet(char a[])
 			}
 			j--;
 		}
+		else if (a[i] == ')')
+		{
+			while (stek[j - 1] != '(')
+			{
+				vihod[m] = razdelznak;
+				m++;
+
+				vihod[m] = stek[j - 1];
+
+				j--;
+				m++;
+
+			}
+			j--;
+		}
 		
 		
 		else
