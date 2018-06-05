@@ -181,9 +181,6 @@ int otvet(char a[])
 			///////////////////////////
 			
 		}
-
-
-
 		else if (vihod[d] == '.')			//если точка
 		{
 			
@@ -203,12 +200,15 @@ int otvet(char a[])
 			//до выполнения действия promzn = 12  znzpt = 32;
 			// действия мы получим promzn = 1232
 			promzn = promzn / delitel;		    // ставит в нужное нам место запятую.
-
 			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
 
 
 			/////////////////////////////////////////////////////
+=======
+			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
+		}
+      /////////////////////////////////////////////////////
 			ogranichenienavvod = ogranichenienavvod*delitel+znzpt; //ограничение на ввод числа не более 6-ти знаков
 			/////////////////////////////////////////////////////
 
@@ -217,9 +217,8 @@ int otvet(char a[])
 			
 			//	cout << "Готовое разделенное число для записи в массив = " << promzn << endl;
 		}
-		
-
 		else if (vihod[d] == 'e') // 
+	else if (vihod[d] == 'e') // 
 		{
 			for (d; vihod[d + 1] != razdelznak; d++)
 			{
@@ -231,6 +230,9 @@ int otvet(char a[])
 					
 					promzn = promzn*posleE;
 
+					posleE = pow(10, stepenposleE);
+					
+					promzn = promzn*posleE;
 					posleE = pow(10, stepenposleE);
 					promzn = promzn*posleE;
 					sc++;
@@ -248,7 +250,6 @@ int otvet(char a[])
 					posleE = 1 / pow(10, stepenposleE);
 					
 					promzn = promzn*posleE;
-
 					posleE = 1 / pow(10, stepenposleE);
 					promzn = promzn*posleE;
 					sc++;
@@ -267,9 +268,7 @@ int otvet(char a[])
 		else if (vihod[d] == razdelznak && (vihod[d + 1] == '+' || vihod[d + 1] == '-' || vihod[d + 1] == '/' || vihod[d + 1] == '*') && (vihod[d - 1] == '+' || vihod[d - 1] == '-' || vihod[d - 1] == '/' || vihod[d - 1] == '*'))
 		{
 			//cout << "Promzn чисто проверить 1.0 новое условие ============== " << promzn << endl;
-
 		}
-
 		else if (vihod[d] == razdelznak)
 		{
 			//cout <<"Promzn чисто проверить ============== " <<promzn << endl;
@@ -313,6 +312,7 @@ int otvet(char a[])
 	for (int kk = 0; kk < k; kk++)
 	{ 
 		if (massint[kk] > 999999 || massint[kk] < -999999)
+		if ((massint[kk] > 999999 || massint[kk] < -999999) && testnamaksimalnoekolvosimvolov <=50)
 		{
 		if (testnaogranichenienavvodvnachale == 1 && testnamaksimalnoekolvosimvolov > 50 )
 		{
@@ -350,7 +350,6 @@ int otvet(char a[])
 			cout << "Некорректный ввод" << endl;
 			break;
 		}
-
 		else
 		cout << "Тест ИнтМассива (Ответ) = " << massint[kk] << endl;
 		
